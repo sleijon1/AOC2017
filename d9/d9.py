@@ -6,6 +6,7 @@ def count_groups():
     closed_groups = 0
     scores = []
     skip_next = False
+    garbage_counter = 0
     for i, char in enumerate(stream):
         if skip_next:
             skip_next = False
@@ -21,7 +22,10 @@ def count_groups():
             if opened_groups > 0:
                 scores.append(opened_groups)
                 opened_groups -= 1
-    print("Solution part 1: " + str(scores) + " | sum = " + str(sum(scores)))
+        elif garbage:
+            garbage_counter += 1
 
+    print("Solution part 1: " + str(scores) + " | sum = " + str(sum(scores)))
+    print("Solution part 2, amount of garbage: " + str(garbage_counter))
 
 count_groups()
