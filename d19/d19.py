@@ -20,22 +20,27 @@ def follow_path(grid=grid):
                 break
             if map_item not in ('-', '|', '+'):
                 collected_letters.append(map_item)
-            elif map_item == '+' and ((ny+dy == len(grid) or nx+dx == len(grid[0]))
+            elif map_item == '+' and ((ny+dy == len(grid) or
+                                       nx+dx == len(grid[0]))
                                       or (grid[ny+dy][nx+dx] == ' ')):
                 left_right = [((1, 0), nx+1, ny), ((-1, 0), nx-1, ny)]
                 down_up = [((0, 1), nx, ny+1), ((0, -1), nx, ny-1)]
                 if direction in ((0, 1), (0, -1)):
+                    # moving down or up -> turn left or right
                     to_check = left_right
                 else:
                     to_check = down_up
                 for move in to_check:
                     d, adjx, adjy = move
                     if adjy < len(grid) and adjx < len(grid[0]):
+                        # if the move is in bounds
                         if grid[adjy][adjx] != ' ':
+                            # if the move is possible
                             direction = d
             packet_pos = (nx, ny)
         except IndexError:
             break
     print("Solution part 1: " + str(''.join(collected_letters)))
     print("Solution part 2: " + str(steps))
+
 follow_path(grid)
