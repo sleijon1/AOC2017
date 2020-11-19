@@ -97,7 +97,11 @@ def split_square(square):
     return new_square
 
 square = START_PATTERN
-for _ in range(iterations := 18):
+for _ in range(iterations := 5):
     square = split_square(square)
 #print(square)
+print("Solution part 1: " + str(list.count(list(square), '#')))
+square = START_PATTERN
+for _ in range(iterations := 18):
+    square = split_square(square)
 print("Solution part 1: " + str(list.count(list(square), '#')))
