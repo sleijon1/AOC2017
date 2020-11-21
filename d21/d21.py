@@ -1,6 +1,6 @@
 from copy import deepcopy
 from math import sqrt
-#from itertools import permutations as perm
+
 # ---------------------- Creating patterns  ---------------------- #
 LINES = open("input.txt").readlines()
 def reflect_x(square: list) -> [str]:
@@ -24,46 +24,35 @@ for line in LINES:
     pattern, enhancement = line.split('=>')
     rows = pattern.strip(' ').split('/')
     permutations = []
-    # print(pattern)
-    # print(result:=rotate_90(['.#.', '..#', '###']))
-    # print(rotate_90(result))
+    # Cube has 4x3 = 8 Unique rotations and reflections
     permutations.append(''.join(list(rows)))
     permutations.append(''.join(rotate_90(list(rows))))
     permutations.append(''.join(rotate_90(rotate_90(list(rows)))))
     permutations.append(''.join(rotate_90(rotate_90(rotate_90(list(rows))))))
     permutations.append(''.join(reflect_x(rotate_90(list(rows)))))
     permutations.append(''.join(reflect_y(rotate_90(list(rows)))))
-    permutations.append(''.join(reflect_x(rotate_90(rotate_90(list(rows))))))
-    permutations.append(''.join(reflect_y(rotate_90(rotate_90(list(rows))))))
-    permutations.append(''.join(reflect_x(rotate_90(rotate_90(rotate_90(list(rows)))))))
-    permutations.append(''.join(reflect_y(rotate_90(rotate_90(rotate_90(list(rows)))))))
     permutations.append(''.join(reflect_x(list(rows))))
-    permutations.append(''.join(rotate_90(reflect_x(list(rows)))))
     permutations.append(''.join(reflect_y(list(rows))))
-    permutations.append(''.join(rotate_90(reflect_y(list(rows)))))
-    permutations.append(''.join(reflect_x(reflect_y(list(rows)))))
-    permutations.append(''.join(reflect_x(reflect_y(rotate_90(list(rows))))))
-    permutations.append(''.join(rotate_90(reflect_x(reflect_y(list(rows))))))
     for perm in permutations:
         patterns[perm] = ''.join(enhancement.strip().split('/'))
-#print(patterns)
 # ---------------------- Creating patterns  ---------------------- #
 
-#START_PATTERN = "#..#........#..#"
 START_PATTERN = ".#...####"
 
 
-def split_square(square):
+def split_square(square: str) -> str:
+    """ Split square into 2x2's or 3x3's and enhances
+    them into 3x3's or 4x4's according to patterns dict
+
+    Positional arguments:
+    square -- square represented as a string
+    """
     size = int(sqrt(len(square)))
-    #squares_per_row = size // 2
     printrow = ""
-    #print("------------- SQUARE %d --------------" % size)
     for i in range(1, len(square)+1):
         printrow += square[i-1]
         if (i) % size == 0:
-            #print(printrow)
             printrow = ""
-    #print("------------- SQUARE --------------")
     new_squares = []
     if size % 2 == 0:
         new_square_size = 3
@@ -81,27 +70,22 @@ def split_square(square):
             new_square += square[row+size:row+size+increment]
             if size % 3 == 0 and size % 2 != 0:
                 new_square += square[row+2*size:row+2*size+increment]
-            #print("patterns: ", patterns[new_square])
-            #print("subsquares: ", new_square, "pattern match: ", patterns[new_square])
             new_squares.append(patterns[new_square])
     rows = []
-    #print("new_squares: ", new_squares, "len new_squares: ", len(new_squares))
     for i in range(0, len(new_squares), layer_squares):
         for j in range(0, len(new_squares[0]), new_square_size):
             row = ""
             for k in range(i, i+layer_squares):
                 row += new_squares[k][j:j+new_square_size]
-                #print("row: ", row, "k", k)
             rows.append(row)
     new_square = ''.join(rows)
     return new_square
 
 square = START_PATTERN
-for _ in range(iterations := 5):
+for i in range(iterations := 23):
     square = split_square(square)
-#print(square)
-print("Solution part 1: " + str(list.count(list(square), '#')))
-square = START_PATTERN
-for _ in range(iterations := 18):
-    square = split_square(square)
-print("Solution part 1: " + str(list.count(list(square), '#')))
+    if i == 4:
+        print("Solution part 1: " + str(list.count(list(square), '#')))
+        square = START_PATTERN
+    if i == 22:
+        print("Solution part 2: " + str(list.count(list(square), '#')))
