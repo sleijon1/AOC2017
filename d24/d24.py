@@ -1,5 +1,5 @@
 from copy import deepcopy
-
+from collections import deque
 
 lines = open("input.txt").readlines()
 bridges = []
@@ -10,12 +10,13 @@ for line in lines:
 
 
 def find_strongest(bridges):
-    queue = [(bridge, 1, []) for bridge in bridges if bridge[0] == 0]
+    queue = deque([(bridge, 1, []) for bridge in bridges if bridge[0] == 0])
     valid_bridges = []
     while queue:
-        current_bridge, open_index, path = queue.pop(0)
-        copy_path = deepcopy(path)
+        current_bridge, open_index, path = queue.popleft()
+        copy_path = list(path)
         copy_path.append(current_bridge)
+        # Debug prints
         #print("Current bridge:", current_bridge)
         #print("Current open index:", open_index)
         possible_connections = [bridge for bridge in bridges
@@ -30,6 +31,7 @@ def find_strongest(bridges):
                 new_open_index = 1
             queue.append((connection, new_open_index, copy_path))
         valid_bridges.append(copy_path)
+        # Debug prints
         #print("Possible connections:", possible_connections)
         #print("Queue:", queue)
     strongest = 0
